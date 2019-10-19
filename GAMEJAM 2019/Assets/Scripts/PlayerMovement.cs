@@ -10,18 +10,31 @@ public class PlayerMovement : MonoBehaviour
     public float jumpSpeed = 8.0f;
     public float gravity = 20.0f;
 
+    public TimerNight timerNight;
+
     private Vector3 moveDirection = Vector3.zero;
 
     public Transform pivot;
     public float rotateSpeed;
 
+    public Material dayPlayer;
+    public Material nightPlayer;
+
+    public Material dayGround;
+    public Material nightGround;
+
+    public GameObject ground;
+
+    [HideInInspector]public bool isDay;
+
     void Start()
     {
         characterController = GetComponent<CharacterController>();
+        isDay = true;
     }
 
-    void Update()
-    {
+    void FixedUpdate()
+    {   
         if (characterController.isGrounded)
         {
             // We are grounded, so recalculate
@@ -33,14 +46,20 @@ public class PlayerMovement : MonoBehaviour
             if (Input.GetButton("Jump"))
             {
                 moveDirection.y = jumpSpeed;
+                
+                
             }
         }
 
         else{
             moveDirection.x = Input.GetAxis("Horizontal");
             moveDirection.z = Input.GetAxis("Vertical");
-            moveDirection.x *= speed/2;
-            moveDirection.z *= speed/2;
+            moveDirection.x *= speed*3/4;
+            moveDirection.z *= speed*3/4;
+
+            if(Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.JoystickButton5)){
+                moveDirection.y = jumpSpeed*0.6f;
+            }
         }
         
 
@@ -58,5 +77,43 @@ public class PlayerMovement : MonoBehaviour
             Quaternion newRotation = Quaternion.LookRotation(new Vector3(-moveDirection.x, 0f, -moveDirection.z));
             transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, rotateSpeed*Time.deltaTime);
         }
+    }
+
+    void Update(){
+        if(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.JoystickButton2)){
+            speed = 10.0f;
+
+        }
+        else{
+            speed = 6.0f;
+        }
+        
+        if(Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.JoystickButton5)){
+            if (isDay){
+                isDay = false;
+                changeMaterialNight();
+                timerNight.startNight();
+            }
+
+            else{
+                isDay = true;
+                changeMaterialDay();
+                timerNight.finishNight();
+
+            }
+
+        }
+    }
+
+    void changeMaterialNight(){
+        GetComponent<MeshRenderer>().material = nightPlayer;
+        ground.GetComponent<MeshRenderer>().material = nightGround;
+
+    }
+
+    public void changeMaterialDay(){
+        GetComponent<MeshRenderer>().material = dayPlayer;
+        ground.GetComponent<MeshRenderer>().material = dayGround;
+
     }
 }
