@@ -5,7 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - Night
-  - Resize
+  - Day
+  - Death
+  - ColliderObstacle
+  - Ground
   layers:
   - Default
   - TransparentFX

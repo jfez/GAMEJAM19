@@ -17,12 +17,10 @@ public class ObstaclesResize : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (timerNight.isNight){
-            //transform.localScale -= new Vector3(resizeSpeed * Time.deltaTime, 0, 0);
-            transform.localScale = new Vector3(originalSizeX * (timerNight.timeCounter/timerNight.standarTime), transform.localScale.y, transform.localScale.z);
-            }
+        transform.localScale = new Vector3(originalSizeX * (timerNight.timeCounter/timerNight.standarTime), transform.localScale.y, transform.localScale.z);
 
         }
+        
         
         
 }

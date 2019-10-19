@@ -23,7 +23,10 @@ public class PlayerMovement : MonoBehaviour
     public Material dayGround;
     public Material nightGround;
 
-    public GameObject ground;
+    //public GameObject ground;
+    private GameObject[] grounds;
+    private bool resetJump;
+    private bool canSwitch;
 
     [HideInInspector]public bool isDay;
 
@@ -31,6 +34,10 @@ public class PlayerMovement : MonoBehaviour
     {
         characterController = GetComponent<CharacterController>();
         isDay = true;
+        resetJump = true;
+        canSwitch = true;
+
+        grounds = GameObject.FindGameObjectsWithTag("Ground");
     }
 
     void FixedUpdate()
@@ -42,6 +49,8 @@ public class PlayerMovement : MonoBehaviour
 
             moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));
             moveDirection *= speed;
+
+            resetJump = true;
 
             if (Input.GetButton("Jump"))
             {
@@ -57,8 +66,9 @@ public class PlayerMovement : MonoBehaviour
             moveDirection.x *= speed*3/4;
             moveDirection.z *= speed*3/4;
 
-            if(Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.JoystickButton5)){
+            if((Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.JoystickButton5)) && resetJump && canSwitch){
                 moveDirection.y = jumpSpeed*0.6f;
+                resetJump = false;
             }
         }
         
@@ -88,7 +98,7 @@ public class PlayerMovement : MonoBehaviour
             speed = 6.0f;
         }
         
-        if(Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.JoystickButton5)){
+        if((Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.JoystickButton5)) && canSwitch){
             if (isDay){
                 isDay = false;
                 changeMaterialNight();
@@ -107,13 +117,52 @@ public class PlayerMovement : MonoBehaviour
 
     void changeMaterialNight(){
         GetComponent<MeshRenderer>().material = nightPlayer;
-        ground.GetComponent<MeshRenderer>().material = nightGround;
+        foreach (GameObject ground in grounds){
+            ground.GetComponent<MeshRenderer>().material = nightGround;
+        }
+        
 
     }
 
     public void changeMaterialDay(){
         GetComponent<MeshRenderer>().material = dayPlayer;
-        ground.GetComponent<MeshRenderer>().material = dayGround;
+        foreach (GameObject ground in grounds){
+            ground.GetComponent<MeshRenderer>().material = dayGround;
+        }
+
+    }
+
+    private void OnTriggerEnter(Collider collider)
+    {
+        if(collider.gameObject.tag == "Death"){
+            Death();
+
+        }
+
+        if(collider.gameObject.tag == "ColliderObstacle"){
+            canSwitch=false;
+
+        }
+    }
+
+    private void OnTriggerExit(Collider collider)
+    {
+        if(collider.gameObject.tag == "ColliderObstacle"){
+            canSwitch=true;
+
+        }
+    }
+
+    void Death(){
+        if (!isDay){
+            isDay = true;
+            changeMaterialDay();
+            timerNight.finishNight();
+        }
+
+        characterController.enabled = false;
+        characterController.transform.position = new Vector3(0, 1.5f, 0);
+        characterController.enabled = true;
 
     }
 }

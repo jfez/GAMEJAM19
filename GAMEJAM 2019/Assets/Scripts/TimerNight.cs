@@ -8,11 +8,12 @@ public class TimerNight : MonoBehaviour
     public PlayerMovement playerMovement;
     
     [HideInInspector]public float timeCounter;
-    public bool isNight;
+    private bool isNight;
     public Image timeBar;
     [HideInInspector]public float standarTime;
 
     private GameObject[] obstaclesNight;
+    private GameObject[] obstaclesDay;
     
 
     private float resizeSpeed;
@@ -29,10 +30,15 @@ public class TimerNight : MonoBehaviour
         
 
         obstaclesNight = GameObject.FindGameObjectsWithTag("Night");
+        obstaclesDay = GameObject.FindGameObjectsWithTag("Day");
         
 
         foreach (GameObject obstacle in obstaclesNight){
             obstacle.SetActive(false);
+        }
+
+        foreach (GameObject obstacle in obstaclesDay){
+            obstacle.SetActive(true);
         }
         
     }
@@ -64,12 +70,18 @@ public class TimerNight : MonoBehaviour
         foreach (GameObject obstacle in obstaclesNight){
             obstacle.SetActive(true);
         }
+        foreach (GameObject obstacle in obstaclesDay){
+            obstacle.SetActive(false);
+        }
     }
 
     public void finishNight(){
         isNight = false;
         foreach (GameObject obstacle in obstaclesNight){
             obstacle.SetActive(false);
+        }
+        foreach (GameObject obstacle in obstaclesDay){
+            obstacle.SetActive(true);
         }
     }
 }
