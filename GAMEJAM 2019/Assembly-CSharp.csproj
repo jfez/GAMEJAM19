@@ -57,6 +57,7 @@
      <Compile Include="Assets\Scripts\CapsuleDetection.cs" />
      <Compile Include="Assets\Scripts\CreateTorus.cs" />
      <Compile Include="Assets\Scripts\ObstaclesResize.cs" />
+     <Compile Include="Assets\Scripts\ObstaclesResize2.cs" />
      <Compile Include="Assets\Scripts\PlayerMovement.cs" />
      <Compile Include="Assets\Scripts\Smoking.cs" />
      <Compile Include="Assets\Scripts\TimerNight.cs" />

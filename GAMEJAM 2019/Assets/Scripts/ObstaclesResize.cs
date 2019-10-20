@@ -19,7 +19,7 @@ public class ObstaclesResize : MonoBehaviour
     {
         transform.localScale = new Vector3(originalSizeX * (timerNight.timeCounter/timerNight.standarTime), transform.localScale.y, transform.localScale.z);
 
-        }
+    }
         
         
         

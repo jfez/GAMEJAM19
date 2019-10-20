@@ -28,7 +28,7 @@ public class Smoking : MonoBehaviour
     {
         transform.localScale += Vector3.one * shrinkSpeed * Time.deltaTime;
 
-        if(transform.localScale.x >= 4){
+        if(transform.localScale.x >= 5){
             DestroyTorus();
         }
     }

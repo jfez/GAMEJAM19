@@ -35,10 +35,18 @@ public class PlayerMovement : MonoBehaviour
     public GameObject playerNightgown;
     public GameObject playerNightcap;
 
+    public GameObject lightObject;
+    private Light lightComponent;
+
+    private Color lightDay;
+    private Color lightNight;
+
     //public GameObject ground;
     private GameObject[] grounds;
     private bool resetJump;
     private bool canSwitch;
+    private bool walking;
+    private Animator animator;
 
     [HideInInspector]public bool isDay;
 
@@ -51,6 +59,12 @@ public class PlayerMovement : MonoBehaviour
 
         grounds = GameObject.FindGameObjectsWithTag("Ground");
         checkpoint = transform.position;
+        walking = false;
+        animator = GetComponent<Animator>();
+        lightDay = new Color(0.94f,0.92f,0.2f);
+        lightNight = new Color(0.2f, 0.35f, 0.94f);
+        lightComponent = lightObject.GetComponent<Light>();
+
     }
 
     void FixedUpdate()
@@ -65,15 +79,27 @@ public class PlayerMovement : MonoBehaviour
 
             resetJump = true;
 
+            if(Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0){
+                walking = true;
+
+            }
+
+            else{
+                walking = false;
+            }
+
             if (Input.GetButton("Jump"))
             {
                 moveDirection.y = jumpSpeed;
+                animator.SetTrigger("Jump");
                 
                 
             }
         }
 
         else{
+            walking = false;
+            
             moveDirection.x = Input.GetAxis("Horizontal");
             moveDirection.z = Input.GetAxis("Vertical");
             moveDirection.x *= speed*3/4;
@@ -82,6 +108,7 @@ public class PlayerMovement : MonoBehaviour
             if((Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.JoystickButton5)) && resetJump && canSwitch){
                 moveDirection.y = jumpSpeed*0.6f;
                 resetJump = false;
+                
             }
         }
         
@@ -103,6 +130,8 @@ public class PlayerMovement : MonoBehaviour
     }
 
     void Update(){
+        animator.SetBool("Walking", walking);
+        
         if(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.JoystickButton2)){
             speed = 10.0f;
 
@@ -135,6 +164,8 @@ public class PlayerMovement : MonoBehaviour
         foreach (GameObject ground in grounds){
             ground.GetComponent<MeshRenderer>().material = nightGround;
         }
+        lightComponent.color = lightNight;
+        
         
 
     }
@@ -146,6 +177,7 @@ public class PlayerMovement : MonoBehaviour
         foreach (GameObject ground in grounds){
             ground.GetComponent<MeshRenderer>().material = dayGround;
         }
+        lightComponent.color = lightDay;
 
     }
 

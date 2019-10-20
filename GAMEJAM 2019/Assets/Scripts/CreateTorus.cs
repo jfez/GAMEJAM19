@@ -5,6 +5,7 @@ using UnityEngine;
 public class CreateTorus : MonoBehaviour
 {
     public GameObject torus;
+    public float maxtTime;
     
     private float timer;
 
@@ -20,7 +21,7 @@ public class CreateTorus : MonoBehaviour
         
         timer += Time.deltaTime;
 
-        if(timer >= 3){
+        if(timer >= maxtTime){
             timer = 0f;
             Instantiate(torus, transform.parent);
 
