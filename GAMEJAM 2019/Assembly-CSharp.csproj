@@ -54,8 +54,11 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\CameraController.cs" />
+     <Compile Include="Assets\Scripts\CapsuleDetection.cs" />
+     <Compile Include="Assets\Scripts\CreateTorus.cs" />
      <Compile Include="Assets\Scripts\ObstaclesResize.cs" />
      <Compile Include="Assets\Scripts\PlayerMovement.cs" />
+     <Compile Include="Assets\Scripts\Smoking.cs" />
      <Compile Include="Assets\Scripts\TimerNight.cs" />
  <Reference Include="Unity.TextMeshPro.Editor">
  <HintPath>C:/Users/PcCom/Documents/GitHub/GAMEJAM19/GAMEJAM 2019/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>

@@ -15,6 +15,7 @@ public class TimerNight : MonoBehaviour
     private GameObject[] obstaclesNight;
     private GameObject[] obstaclesDay;
     
+    private Color barColor;
 
     private float resizeSpeed;
     private float originalSizeX;
@@ -48,6 +49,9 @@ public class TimerNight : MonoBehaviour
     {
         //print(timeCounter);
         timeBar.fillAmount = timeCounter/standarTime;
+        barColor = new Color(timeCounter/standarTime, 0, 1 - (timeCounter/standarTime));
+        timeBar.color = barColor;
+        
         
         if (isNight){
             timeCounter -= Time.deltaTime;

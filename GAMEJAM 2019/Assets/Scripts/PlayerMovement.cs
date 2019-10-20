@@ -10,6 +10,8 @@ public class PlayerMovement : MonoBehaviour
     public float jumpSpeed = 8.0f;
     public float gravity = 20.0f;
 
+    private Vector3 checkpoint;
+
     public TimerNight timerNight;
 
     private Vector3 moveDirection = Vector3.zero;
@@ -17,11 +19,21 @@ public class PlayerMovement : MonoBehaviour
     public Transform pivot;
     public float rotateSpeed;
 
-    public Material dayPlayer;
-    public Material nightPlayer;
+    public Material dayPlayerNightcap;
+    public Material dayPlayerNightgown;
+
+    public Material nightPlayerNightcap;
+    public Material nightPlayerNightgown;
 
     public Material dayGround;
     public Material nightGround;
+
+    public Material dayForeground;
+    public Material nightForeground;
+    public GameObject foreground;
+
+    public GameObject playerNightgown;
+    public GameObject playerNightcap;
 
     //public GameObject ground;
     private GameObject[] grounds;
@@ -38,6 +50,7 @@ public class PlayerMovement : MonoBehaviour
         canSwitch = true;
 
         grounds = GameObject.FindGameObjectsWithTag("Ground");
+        checkpoint = transform.position;
     }
 
     void FixedUpdate()
@@ -84,7 +97,7 @@ public class PlayerMovement : MonoBehaviour
         //Rotation of the player
         if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0){
             transform.rotation = Quaternion.Euler(0f, pivot.rotation.eulerAngles.y, 0f);
-            Quaternion newRotation = Quaternion.LookRotation(new Vector3(-moveDirection.x, 0f, -moveDirection.z));
+            Quaternion newRotation = Quaternion.LookRotation(new Vector3(moveDirection.x, 0f, moveDirection.z));
             transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, rotateSpeed*Time.deltaTime);
         }
     }
@@ -116,7 +129,9 @@ public class PlayerMovement : MonoBehaviour
     }
 
     void changeMaterialNight(){
-        GetComponent<MeshRenderer>().material = nightPlayer;
+        playerNightgown.GetComponent<SkinnedMeshRenderer>().material = nightPlayerNightgown;
+        playerNightcap.GetComponent<SkinnedMeshRenderer>().material = nightPlayerNightcap;
+        foreground.GetComponent<MeshRenderer>().material = nightForeground;
         foreach (GameObject ground in grounds){
             ground.GetComponent<MeshRenderer>().material = nightGround;
         }
@@ -125,7 +140,9 @@ public class PlayerMovement : MonoBehaviour
     }
 
     public void changeMaterialDay(){
-        GetComponent<MeshRenderer>().material = dayPlayer;
+        playerNightgown.GetComponent<SkinnedMeshRenderer>().material = dayPlayerNightgown;
+        playerNightcap.GetComponent<SkinnedMeshRenderer>().material = dayPlayerNightcap;
+        foreground.GetComponent<MeshRenderer>().material = dayForeground;
         foreach (GameObject ground in grounds){
             ground.GetComponent<MeshRenderer>().material = dayGround;
         }
@@ -153,7 +170,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void Death(){
+    public void Death(){
         if (!isDay){
             isDay = true;
             changeMaterialDay();
@@ -161,8 +178,9 @@ public class PlayerMovement : MonoBehaviour
         }
 
         characterController.enabled = false;
-        characterController.transform.position = new Vector3(0, 1.5f, 0);
+        characterController.transform.position = checkpoint;
         characterController.enabled = true;
 
     }
+    
 }
