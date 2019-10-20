@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Smoking : MonoBehaviour
 {
+    public float maxScale;
+    
     private GameObject player;
     private PlayerMovement playerMovement;
     private float shrinkSpeed;
@@ -28,7 +30,7 @@ public class Smoking : MonoBehaviour
     {
         transform.localScale += Vector3.one * shrinkSpeed * Time.deltaTime;
 
-        if(transform.localScale.x >= 5){
+        if(transform.localScale.x >= 7){
             DestroyTorus();
         }
     }

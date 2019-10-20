@@ -9,6 +9,9 @@ TagManager:
   - Death
   - ColliderObstacle
   - Ground
+  - Checkpoint
+  - SpecialCP
+  - End
   layers:
   - Default
   - TransparentFX

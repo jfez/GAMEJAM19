@@ -5,14 +5,16 @@ using UnityEngine;
 public class CreateTorus : MonoBehaviour
 {
     public GameObject torus;
-    public float maxtTime;
+    public float maxTime;
     
     private float timer;
+    private AudioSource smokingSounds;
 
     // Start is called before the first frame update
     void Start()
     {
         timer = 0f;
+        smokingSounds = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -21,9 +23,11 @@ public class CreateTorus : MonoBehaviour
         
         timer += Time.deltaTime;
 
-        if(timer >= maxtTime){
+        if(timer >= maxTime){
             timer = 0f;
             Instantiate(torus, transform.parent);
+            smokingSounds.Play();
+
 
         }
         

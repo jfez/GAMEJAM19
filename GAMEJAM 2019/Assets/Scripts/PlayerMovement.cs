@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -32,6 +33,10 @@ public class PlayerMovement : MonoBehaviour
     public Material nightForeground;
     public GameObject foreground;
 
+    public GameObject obstacle1;
+    public GameObject obstacle2;
+    public GameObject obstacle3;
+
     public GameObject playerNightgown;
     public GameObject playerNightcap;
 
@@ -50,6 +55,10 @@ public class PlayerMovement : MonoBehaviour
 
     [HideInInspector]public bool isDay;
 
+    public AudioClip jumpSound;
+    public AudioClip switchSound;
+    private AudioSource amaranthAudio;
+
     void Start()
     {
         characterController = GetComponent<CharacterController>();
@@ -64,6 +73,7 @@ public class PlayerMovement : MonoBehaviour
         lightDay = new Color(0.94f,0.92f,0.2f);
         lightNight = new Color(0.2f, 0.35f, 0.94f);
         lightComponent = lightObject.GetComponent<Light>();
+        amaranthAudio = GetComponent<AudioSource>();
 
     }
 
@@ -92,6 +102,8 @@ public class PlayerMovement : MonoBehaviour
             {
                 moveDirection.y = jumpSpeed;
                 animator.SetTrigger("Jump");
+                amaranthAudio.clip = jumpSound;
+                amaranthAudio.Play();
                 
                 
             }
@@ -132,7 +144,7 @@ public class PlayerMovement : MonoBehaviour
     void Update(){
         animator.SetBool("Walking", walking);
         
-        if(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.JoystickButton2)){
+        if(Input.GetKey(KeyCode.LeftShift) || Input.GetAxis("Run") != 0){
             speed = 10.0f;
 
         }
@@ -153,6 +165,9 @@ public class PlayerMovement : MonoBehaviour
                 timerNight.finishNight();
 
             }
+
+            amaranthAudio.clip = switchSound;
+            amaranthAudio.Play();
 
         }
     }
@@ -190,6 +205,29 @@ public class PlayerMovement : MonoBehaviour
 
         if(collider.gameObject.tag == "ColliderObstacle"){
             canSwitch=false;
+
+        }
+
+        if(collider.gameObject.tag == "Checkpoint"){
+            checkpoint = transform.position;
+
+        }
+
+        if(collider.gameObject.tag == "SpecialCP"){
+            checkpoint = transform.position;
+            obstacle1.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
+            obstacle1.transform.GetChild(1).GetComponent<MeshRenderer>().enabled = false;
+            obstacle2.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
+            obstacle2.transform.GetChild(1).GetComponent<MeshRenderer>().enabled = false;
+            obstacle3.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
+            obstacle3.transform.GetChild(1).GetComponent<MeshRenderer>().enabled = false;
+
+            
+
+        }
+
+        if(collider.gameObject.tag == "End"){
+            SceneManager.LoadScene("Initial");
 
         }
     }
