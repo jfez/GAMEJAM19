@@ -12,6 +12,16 @@ TagManager:
   - Checkpoint
   - SpecialCP
   - End
+  - Foreground
+  - ExitManager
+  - Checkpoint1
+  - Checkpoint2
+  - Checkpoint3
+  - Checkpoint4
+  - Checkpoint5
+  - Checkpoint6
+  - Checkpoint7
+  - Flag
   layers:
   - Default
   - TransparentFX
@@ -22,8 +32,8 @@ TagManager:
   - 
   - 
   - PostProcessing
-  - 
-  - 
+  - Player
+  - Flag
   - 
   - 
   - 

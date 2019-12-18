@@ -15,6 +15,8 @@ public class PlayerMovement : MonoBehaviour
 
     public TimerNight timerNight;
 
+    public GameObject canvasTuto;
+
     private Vector3 moveDirection = Vector3.zero;
 
     public Transform pivot;
@@ -31,7 +33,8 @@ public class PlayerMovement : MonoBehaviour
 
     public Material dayForeground;
     public Material nightForeground;
-    public GameObject foreground;
+    [HideInInspector]
+    public GameObject [] foregrounds;
 
     public GameObject obstacle1;
     public GameObject obstacle2;
@@ -41,6 +44,9 @@ public class PlayerMovement : MonoBehaviour
     public GameObject playerNightcap;
 
     public GameObject lightObject;
+
+    
+    public GameObject flag;
     private Light lightComponent;
 
     private Color lightDay;
@@ -59,6 +65,10 @@ public class PlayerMovement : MonoBehaviour
     public AudioClip switchSound;
     private AudioSource amaranthAudio;
 
+    private ExitManager exitManager;
+
+    private int checkpointIndex;
+
     void Start()
     {
         characterController = GetComponent<CharacterController>();
@@ -67,6 +77,7 @@ public class PlayerMovement : MonoBehaviour
         canSwitch = true;
 
         grounds = GameObject.FindGameObjectsWithTag("Ground");
+        foregrounds = GameObject.FindGameObjectsWithTag("Foreground");
         checkpoint = transform.position;
         walking = false;
         animator = GetComponent<Animator>();
@@ -74,11 +85,18 @@ public class PlayerMovement : MonoBehaviour
         lightNight = new Color(0.2f, 0.35f, 0.94f);
         lightComponent = lightObject.GetComponent<Light>();
         amaranthAudio = GetComponent<AudioSource>();
+        exitManager = GameObject.FindGameObjectWithTag("ExitManager").GetComponent<ExitManager>();
+        checkpointIndex = 0;
+        canvasTuto.SetActive(true);
 
     }
 
     void FixedUpdate()
     {   
+        if (exitManager.paused){
+            return;
+        }
+        
         if (characterController.isGrounded)
         {
             // We are grounded, so recalculate
@@ -142,6 +160,10 @@ public class PlayerMovement : MonoBehaviour
     }
 
     void Update(){
+        if (exitManager.paused){
+            return;
+        }
+        
         animator.SetBool("Walking", walking);
         
         if(Input.GetKey(KeyCode.LeftShift) || Input.GetAxis("Run") != 0){
@@ -175,7 +197,9 @@ public class PlayerMovement : MonoBehaviour
     void changeMaterialNight(){
         playerNightgown.GetComponent<SkinnedMeshRenderer>().material = nightPlayerNightgown;
         playerNightcap.GetComponent<SkinnedMeshRenderer>().material = nightPlayerNightcap;
-        foreground.GetComponent<MeshRenderer>().material = nightForeground;
+        foreach (GameObject foreground in foregrounds){
+            foreground.GetComponent<MeshRenderer>().material = nightForeground;
+        }
         foreach (GameObject ground in grounds){
             ground.GetComponent<MeshRenderer>().material = nightGround;
         }
@@ -188,7 +212,9 @@ public class PlayerMovement : MonoBehaviour
     public void changeMaterialDay(){
         playerNightgown.GetComponent<SkinnedMeshRenderer>().material = dayPlayerNightgown;
         playerNightcap.GetComponent<SkinnedMeshRenderer>().material = dayPlayerNightcap;
-        foreground.GetComponent<MeshRenderer>().material = dayForeground;
+        foreach (GameObject foreground in foregrounds){
+            foreground.GetComponent<MeshRenderer>().material = dayForeground;
+        }
         foreach (GameObject ground in grounds){
             ground.GetComponent<MeshRenderer>().material = dayGround;
         }
@@ -208,12 +234,51 @@ public class PlayerMovement : MonoBehaviour
 
         }
 
-        if(collider.gameObject.tag == "Checkpoint"){
+        if(collider.gameObject.tag == "Checkpoint1" && checkpointIndex < 1){
             checkpoint = transform.position;
+            
+            Instantiate(flag, checkpoint, flag.transform.rotation);
+            checkpointIndex++;
+
+            canvasTuto.SetActive(false);
 
         }
 
-        if(collider.gameObject.tag == "SpecialCP"){
+        if(collider.gameObject.tag == "Checkpoint2" && checkpointIndex < 2){
+            checkpoint = transform.position;
+            
+            Instantiate(flag, checkpoint, flag.transform.rotation);
+            checkpointIndex++;
+
+        }
+
+        if(collider.gameObject.tag == "Checkpoint3" && checkpointIndex < 3){
+            checkpoint = transform.position;
+            
+            Instantiate(flag, checkpoint, flag.transform.rotation);
+            checkpointIndex++;
+
+        }
+
+        if(collider.gameObject.tag == "Checkpoint4" && checkpointIndex < 4){
+            checkpoint = transform.position;
+            
+            Instantiate(flag, checkpoint, flag.transform.rotation);
+            checkpointIndex++;
+
+        }
+
+        if(collider.gameObject.tag == "Checkpoint6" && checkpointIndex < 6){
+            checkpoint = transform.position;
+            
+            Instantiate(flag, checkpoint, flag.transform.rotation);
+            checkpointIndex++;
+
+        }
+
+        
+
+        if(collider.gameObject.tag == "SpecialCP" && checkpointIndex < 5){
             checkpoint = transform.position;
             obstacle1.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
             obstacle1.transform.GetChild(1).GetComponent<MeshRenderer>().enabled = false;
@@ -221,6 +286,11 @@ public class PlayerMovement : MonoBehaviour
             obstacle2.transform.GetChild(1).GetComponent<MeshRenderer>().enabled = false;
             obstacle3.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
             obstacle3.transform.GetChild(1).GetComponent<MeshRenderer>().enabled = false;
+
+            
+            Instantiate(flag, checkpoint, flag.transform.rotation);
+
+            checkpointIndex++;
 
             
 
